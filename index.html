@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jay Bartender Game</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Reset & Basic Setup */
-        * { box-sizing: border-box; }
-        
+        /* --- CSS ส่วนการแสดงผล (Responsive) --- */
         body {
             margin: 0;
             padding: 0;
@@ -19,73 +16,58 @@
             font-family: 'Sarabun', sans-serif;
             text-align: center;
             color: white;
-            overflow-x: hidden; /* ป้องกัน Scrollbar แนวนอน */
         }
 
-        /* Container แบบ Responsive */
         .container {
             width: 100%;
-            max-width: 100%; /* Desktop เต็มจอ */
+            max-width: 800px; /* Desktop กว้างสุด 800px */
+            margin: 0 auto;
             padding: 20px;
+            box-sizing: border-box; /* ให้ padding ไม่ดัน width */
             background-color: rgba(0, 0, 0, 0.7);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
-        /* สำหรับหน้าจอขนาดใหญ่ (Desktop) ให้จัด content กว้างหน่อยแต่ไม่เต็มขอบเกินไปเพื่อความสวยงาม */
-        @media (min-width: 1024px) {
-            .content-wrapper {
-                width: 800px; /* จำกัดความกว้างเนื้อหาตรงกลางไม่ให้แบะออกเกินไป */
-            }
-        }
-        
-        @media (max-width: 1023px) {
-            .content-wrapper {
-                width: 100%;
-            }
-        }
-
-        /* รูปภาพ Header */
+        /* รูปภาพ Header ให้ยืดหดตามจอ */
         .header-img {
             display: block;
             width: 100%;
+            max-width: 600px; /* จำกัดขนาดไม่ให้ใหญ่เกินไปบน Desktop */
             height: auto;
             margin: 0 auto 10px;
-            max-width: 600px; /* จำกัดขนาดรูป header ไม่ให้ใหญ่เกินไปบนจอคอม */
         }
 
-        /* ส่วนข้อความสีทอง */
         .gold-headline {
             color: #FFD700;
-            font-size: clamp(1rem, 2.5vw, 1.5rem); /* ปรับขนาดตามจอ */
+            font-size: clamp(1rem, 2.5vw, 1.5rem); /* ปรับขนาดตัวอักษรอัตโนมัติ */
             margin: 30px 0;
             text-shadow: 2px 2px 4px #000000;
             font-weight: bold;
             line-height: 1.6;
+            padding: 0 10px;
         }
 
-        /* Input Group */
         .input-group {
             background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
+            padding: 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 215, 0, 0.3);
-            width: 100%;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         input[type="text"] {
-            display: block;
-            width: 100%;
+            width: 80%;
             max-width: 400px;
-            margin: 10px auto;
             padding: 12px;
             border-radius: 5px;
             border: none;
             font-size: 1rem;
             text-align: center;
+            margin: 10px auto;
+            display: block;
         }
 
         input[type="file"] {
@@ -98,11 +80,10 @@
             text-align: center;
         }
 
-        /* Preview Image */
         #preview-container {
             margin: 15px auto;
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             border: 2px dashed #FFD700;
             border-radius: 10px;
             display: none;
@@ -116,7 +97,6 @@
             object-fit: cover;
         }
 
-        /* Button */
         button {
             background-color: #FFD700;
             color: #000;
@@ -129,6 +109,7 @@
             margin-top: 20px;
             transition: 0.3s;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            max-width: 100%;
         }
 
         button:hover {
@@ -136,21 +117,26 @@
             transform: scale(1.05);
         }
 
-        /* Result Area */
         #result-container {
             display: none;
             margin-top: 30px;
-            width: 100%;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
             animation: fadeIn 1s;
         }
 
         #final-image {
-            width: 100%;
-            max-width: 600px; /* รูปผลลัพธ์ไม่ใหญ่เกินไปบนจอ Desktop */
+            max-width: 100%; /* ให้รูปผลลัพธ์ย่อตามหน้าจอมือถือ */
             height: auto;
             border: 5px solid #FFD700;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .download-hint {
+            color: #ccc; 
+            margin-top: 10px; 
+            font-size: 0.9rem;
         }
 
         @keyframes fadeIn {
@@ -162,66 +148,64 @@
 <body>
 
     <div class="container">
-        <div class="content-wrapper">
-            <img src="logo.png" class="header-img" alt="Logo">
-            <img src="pic01.png" class="header-img" alt="Pic 01">
-            <img src="text01.png" class="header-img" alt="Text 01">
-            <img src="pic02.png" class="header-img" alt="Pic 02">
+        <img src="logo.png" class="header-img" alt="Logo">
+        <img src="pic01.png" class="header-img" alt="Pic 01">
+        <img src="text01.png" class="header-img" alt="Text 01">
+        <img src="pic02.png" class="header-img" alt="Pic 02">
 
-            <div class="gold-headline">
-                "คอกเทลที่เหมาะกับคุณน่ะเหรอ... <br>
-                ได้สิ ผมเจย์บาร์เทนเดอร์เลยนะ <br>
-                จะชงที่เหมาะๆ ให้เลย"
+        <div class="gold-headline">
+            "ผมเจย์บาร์เทนเดอร์ยินดีรับใช้ครับ <br>
+             บอกชื่อกับรูปคุณมาสิ<br>
+            ผมจะชงแก้วที่เหมาะกับคุณให้"
+        </div>
+
+        <div class="input-group">
+            <label style="font-size: 1.1rem; font-weight: bold;">1. เลือกรูปใบหน้าของคุณ</label>
+            <input type="file" id="uploadImage" accept="image/*" onchange="showPreview(event)">
+            
+            <div id="preview-container">
+                <img id="preview-img" src="">
             </div>
+            
+            <label style="font-size: 1.1rem; font-weight: bold; margin-top: 20px; display:block;">2. กรอกชื่อของคุณ</label>
+            <input type="text" id="userName" placeholder="พิมพ์ชื่อเล่น...">
 
-            <div class="input-group">
-                <label style="font-size: 1.1rem; font-weight: bold;">1. เลือกรูปใบหน้าของคุณ</label>
-                <input type="file" id="uploadImage" accept="image/*" onchange="showPreview(event)">
-                
-                <div id="preview-container">
-                    <img id="preview-img" src="">
-                </div>
-                
-                <label style="font-size: 1.1rem; font-weight: bold; margin-top: 20px; display:block;">2. กรอกชื่อของคุณ</label>
-                <input type="text" id="userName" placeholder="พิมพ์ชื่อเล่น...">
+            <button onclick="generateCocktailCard()">ชงคอกเทลเลย</button>
+        </div>
 
-                <button onclick="generateCocktailCard()">ชงคอกเทลเลย</button>
-            </div>
-
-            <div id="result-container">
-                <h2 style="color:#FFD700;">เสิร์ฟแล้วครับ!</h2>
-                <img id="final-image" src="" alt="Result Card">
-                <p style="color: #ccc; margin-top: 10px;">กดค้างที่รูปเพื่อบันทึก หรือ คลิกขวา Save Image</p>
-                <button onclick="location.reload()" style="background-color: #444; color: white; padding: 10px 20px; font-size: 1rem; margin-top: 20px;">เล่นใหม่อีกครั้ง</button>
-            </div>
+        <div id="result-container">
+            <h2 style="color:#FFD700;">เสิร์ฟแล้วครับ!</h2>
+            <img id="final-image" src="" alt="Result Card">
+            <p class="download-hint">กดค้างที่รูปเพื่อบันทึก หรือ คลิกขวา Save Image</p>
+            <button onclick="location.reload()" style="background-color: #444; color: white; padding: 10px 20px; font-size: 1rem; margin-top: 20px;">เล่นใหม่อีกครั้ง</button>
         </div>
     </div>
 
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        // *** ข้อมูลคอกเทล 20 รายการ ***
-        const cocktails = [
-            { title: "คอกเทล เฟรนด์โซนคนดี", desc: "ทำดีแทบตายสุดท้ายเป็นได้แค่พี่น้อง รสชาติจึงต้องหวานนำตอนต้นแล้วขมคอตอนปลาย ด้วย Gin ผสม Tonic ใส่ Bitters ให้พอช้ำใจ แล้วแปะเปลือกส้มโง่ๆ ไว้หลอกตัวเองว่าเขามีใจ" },
-            { title: "คอกเทล มงคลแปดทิศ", desc: "ชีวิตขับเคลื่อนด้วยดวงและสีมงคล แก้วนี้ต้องมาในธีมเขียวเหนี่ยวทรัพย์ ผสม น้ำสมุนไพรไทย กับ Vodka โรย แผ่นทองคำเปลว ปลุกเสกก่อนดื่มเพื่อความปังปุริเย่" },
-            { title: "คอกเทล เผือกสไปซี่", desc: "รู้ลึกรู้จริงเรื่องชาวบ้านยิ่งกว่าเรื่องตัวเอง รสชาติจึงต้องเปรี้ยวจี๊ดเข็ดฟันด้วย มะนาวคั้นสด ตัดกับ เกลือ ที่ขอบแก้ว และเหยาะ Tabasco ให้เผ็ดร้อนเหมือนฝีปากเวลาเม้าท์มอย" },
-            { title: "คอกเทล ออฟฟิศซินโดรม", desc: "สำหรับยอดมนุษย์ที่แบกโลกและเดดไลน์ไว้บนบ่า ต้องเจอ Espresso Shot เข้มๆ ตบด้วย Kahlua และ Vodka ให้ตื่นเต็มตาพร้อมสู้รบกับลูกค้า หรือจะหลับคาโต๊ะก็อีกเรื่อง" },
-            { title: "คอกเทล ทรงอย่างแบด", desc: "ลุคเท่ๆ นิ่งๆ แต่กินรอบวง ต้องแก้วนี้ที่หนักแน่นด้วย Whiskey บ่มถังไม้โอ๊ค รม ควันไม้หอม ให้ดูลึกลับซับซ้อน ดื่มแล้วดูอันตรายแต่แซ่บ" },
-            { title: "คอกเทล หลงในทุ่งลาเวนเดอร์", desc: "มองโลกในแง่ดี วิ่งเล่นในทุ่งดอกไม้ ต้องเจอกับ น้ำอัญชันมะนาว สีม่วงพาสเทลแสนหวาน ผสม Syrup กลิ่นดอกไม้ และ Sparkling Wine ฟองฟู่ให้ดูฟรุ้งฟริ้งเหมือนอยู่ในความฝัน" },
-            { title: "คอกเทล เศรษฐีต้นเดือน", desc: "ฉลองเงินเดือนออกเหมือนถูกหวย รสชาติหรูหราดูแพงด้วย Champagne หรือ Prosecco ท็อปปิ้งด้วย สตรอว์เบอร์รีลูกโต ดื่มให้เชิดฉายก่อนจะกลับไปกินมาม่าตอนปลายเดือน" },
-            { title: "คอกเทล อปป้าซารางเฮ", desc: "เพราะอปป้าคือเมน แก้วนี้เลยต้องสดใสสไตล์เกาหลี ผสม Soju รสพีช กับ Yogurt Jelly เคี้ยวหนึบ ให้ฟีลเหมือนนางเอกซีรีส์ที่กำลังรอพระเอกมารับ" },
-            { title: "คอกเทล โสรยา", desc: "ชีวิตรันทดกว่าละครหลังข่าว รสชาติจึงต้องเค็มปะแล่มเหมือนน้ำตาที่ไหลริน ด้วย Margarita สูตรคลาสสิก ปาด เกลือ หนาๆ ที่ขอบแก้ว ดื่มย้อมใจให้ลืมความชอกช้ำ" },
-            { title: "คอกเทล สายย่อรอเอวเคล็ด", desc: "เกิดมาเพื่อปาร์ตี้ แสงสีเสียงต้องมา แก้วนี้ต้องดีดจัดด้วย Energy Drink ผสม Jägermeister สีสันฉูดฉาด ดื่มแล้วพร้อมเด้งไปหน้าเวทีแบบไม่มีใครห้ามทัน" },
-            { title: "คอกเทล ทาสแมวเมิน", desc: "รักเขาข้างเดียว ข้าวปลาเทให้แต่ไม่เคยสนใจ ต้องย้อมใจด้วย Gin Fizz ฟองไข่ขาวนุ่มฟูเหมือนพุงเจ้านาย แต่ซ่อนความเปรี้ยวซ่าของมะนาวไว้เหมือนรอยเล็บที่ฝากไว้บนแขน" },
-            { title: "คอกเทล แฟนเก่าคนโปรด", desc: "เลิกกันไปนานแต่ยังวนเวียนในสตอรี่ รสชาติหวานปนขมเหมือนความทรงจำ ด้วย Dark Chocolate Liqueur ผสม Cognac บาดคอเล็กๆ ให้รู้ว่าคิดถึงทีไรก็ยังเจ็บจี๊ดที่ใจ" },
-            { title: "คอกเทล เหม่ยตูอู้ว้าว", desc: "ตัวจริงไม่ตรงปกไม่เป็นไร ขอรูปในไอจีปังไว้ก่อน แก้วนี้ต้องสีสวยฟรุ้งฟริ้งด้วย Cotton Candy ก้อนโต ละลายลงใน Rose Vodka หวานเจี๊ยบจนตาหยี ถ่ายรูปลงสตอรี่แล้วดูแพง (แม้รสชาติจะแสบคอก็ตาม)" },
-            { title: "คอกเทล คนเศร้าของเมาหน่อย", desc: "ชีวิตมันเศร้าจังวะ ต้องกระดก Black Vodka ผสม Blackberry บดละเอียด ให้สีม่วงคล้ำเหมือนรอยช้ำข้างใน ดื่มแล้วดูลึกลับน่าน่าเป็นห่วง" },
-            { title: "คอกเทล ฟรีแลนซ์", desc: "งานเร่ง เงินช้า ลูกค้าแก้บรีฟ แก้วนี้ต้องอัดฉีดวิตามินซีด้วย น้ำส้มคั้นสด ผสม Tequila ช็อตหนักๆ กระตุ้นเลือดลมให้สูบฉีด พร้อมปั่นงานโต้รุ่งยันเช้าโดยไม่น็อค" },
-            { title: "คอกเทล ตัวแม่แคร์บ้าง", desc: "สวย เชิด ไม่สนโลก ใครจะดราม่าพี่ขอจิบสวยๆ รสชาติหรูเริ่ดด้วย Kir Royale แชมเปญผสมเหล้าแบล็คเคอร์แรนท์ สีแดงก่ำดั่งเลือดนก จิบเบาๆ แล้วมองบนใส่พวกขี้อิจฉา" },
-            { title: "คอกเทล เดอะแบกหัวร้อน", desc: "แบกทีมจนหลังหักแต่เพื่อนแจกยับ ต้องดับหัวร้อนด้วย Blue Kamikaze เย็นเจี๊ยบปั่นละเอียด สีฟ้าสดใสเหมือนหลอดมานาในเกม กระดกทีเดียวให้สดชื่นหายบ้า แล้วพร้อมเปิดไมค์ด่าต่อ" },
-            { title: "คอกเทล เด็กฝึกใสใส", desc: "โลกสวย เพิ่งจบใหม่ ไฟแรงเวอร์ ตายังไม่คล้ำ รสชาติสดใสซาบซ่าด้วย Mojito Virgin ดื่มง่าย คล่องคอ เหมือนชีวิตการทำงานที่คิดไปเอง จะโรยด้วยกลีบกุหลาบ" },
-            { title: "คอกเทล วันละกั๊ก", desc: "คุยทุกวัน บอกฝันดีทุกคืน แต่เป็นได้แค่พี่น้อง รสชาติจึงต้องกั๊กๆ ครึ่งๆ กลางๆ แบบ Midori Sour เปรี้ยวอมหวาน สีเขียวนีออนสะดุดตา แต่หาความชัดเจนไม่ได้ว่าตกลงจะเมาหรือจะหวานกันแน่" },
-            { title: "คอกเทล เมาหนีหนี้", desc: "ชื่อฟังดูเหมือนแก๊งทวงหนี้จากจีน เพราะไม่มีตังทำไรไม่ได้ เมาแม่มเลยละกัน B-52 จุดไฟลุกท่วมแก้ว ร้อนแรงแผดเผา กระดกเข้าปากรวดเดียวให้รู้ว่ากูเมาอย่ามาทวง" }
+        // *** ฐานข้อมูลคอกเทล 20 แบบ ***
+        const cocktailData = [
+            { t: "คอกเทล เฟรนด์โซนคนดี", b: "ทำดีแทบตายสุดท้ายเป็นได้แค่พี่น้อง รสชาติจึงต้องหวานนำตอนต้นแล้วขมคอตอนปลาย ด้วย Gin ผสม Tonic ใส่ Bitters ให้พอช้ำใจ แล้วแปะเปลือกส้มโง่ๆ ไว้หลอกตัวเองว่าเขามีใจ" },
+            { t: "คอกเทล มงคลแปดทิศ", b: "ชีวิตขับเคลื่อนด้วยดวงและสีมงคล แก้วนี้ต้องมาในธีมเขียวเหนี่ยวทรัพย์ ผสม น้ำสมุนไพรไทย กับ Vodka โรย แผ่นทองคำเปลว ปลุกเสกก่อนดื่มเพื่อความปังปุริเย่" },
+            { t: "คอกเทล เผือกสไปซี่", b: "รู้ลึกรู้จริงเรื่องชาวบ้านยิ่งกว่าเรื่องตัวเอง รสชาติจึงต้องเปรี้ยวจี๊ดเข็ดฟันด้วย มะนาวคั้นสด ตัดกับ เกลือ ที่ขอบแก้ว และเหยาะ Tabasco ให้เผ็ดร้อนเหมือนฝีปากเวลาเม้าท์มอย" },
+            { t: "คอกเทล ออฟฟิศซินโดรม", b: "สำหรับยอดมนุษย์ที่แบกโลกและเดดไลน์ไว้บนบ่า ต้องเจอ Espresso Shot เข้มๆ ตบด้วย Kahlua และ Vodka ให้ตื่นเต็มตาพร้อมสู้รบกับลูกค้า หรือจะหลับคาโต๊ะก็อีกเรื่อง" },
+            { t: "คอกเทล ทรงอย่างแบด", b: "ลุคเท่ๆ นิ่งๆ แต่กินรอบวง ต้องแก้วนี้ที่หนักแน่นด้วย Whiskey บ่มถังไม้โอ๊ค รม ควันไม้หอม ให้ดูลึกลับซับซ้อน ดื่มแล้วดูอันตรายแต่แซ่บ" },
+            { t: "คอกเทล หลงในทุ่งลาเวนเดอร์", b: "มองโลกในแง่ดี วิ่งเล่นในทุ่งดอกไม้ ต้องเจอกับ น้ำอัญชันมะนาว สีม่วงพาสเทลแสนหวาน ผสม Syrup กลิ่นดอกไม้ และ Sparkling Wine ฟองฟู่ให้ดูฟรุ้งฟริ้งเหมือนอยู่ในความฝัน" },
+            { t: "คอกเทล เศรษฐีต้นเดือน", b: "ฉลองเงินเดือนออกเหมือนถูกหวย รสชาติหรูหราดูแพงด้วย Champagne หรือ Prosecco ท็อปปิ้งด้วย สตรอว์เบอร์รีลูกโต ดื่มให้เชิดฉายก่อนจะกลับไปกินมาม่าตอนปลายเดือน" },
+            { t: "คอกเทล อปป้าซารางเฮ", b: "เพราะอปป้าคือเมน แก้วนี้เลยต้องสดใสสไตล์เกาหลี ผสม Soju รสพีช กับ Yogurt Jelly เคี้ยวหนึบ ให้ฟีลเหมือนนางเอกซีรีส์ที่กำลังรอพระเอกมารับ" },
+            { t: "คอกเทล โสรยา", b: "ชีวิตรันทดกว่าละครหลังข่าว รสชาติจึงต้องเค็มปะแล่มเหมือนน้ำตาที่ไหลริน ด้วย Margarita สูตรคลาสสิก ปาด เกลือ หนาๆ ที่ขอบแก้ว ดื่มย้อมใจให้ลืมความชอกช้ำ" },
+            { t: "คอกเทล สายย่อรอเอวเคล็ด", b: "เกิดมาเพื่อปาร์ตี้ แสงสีเสียงต้องมา แก้วนี้ต้องดีดจัดด้วย Energy Drink ผสม Jägermeister สีสันฉูดฉาด ดื่มแล้วพร้อมเด้งไปหน้าเวทีแบบไม่มีใครห้ามทัน" },
+            { t: "คอกเทล ทาสแมวเมิน", b: "รักเขาข้างเดียว ข้าวปลาเทให้แต่ไม่เคยสนใจ ต้องย้อมใจด้วย Gin Fizz ฟองไข่ขาวนุ่มฟูเหมือนพุงเจ้านาย แต่ซ่อนความเปรี้ยวซ่าของมะนาวไว้เหมือนรอยเล็บที่ฝากไว้บนแขน" },
+            { t: "คอกเทล แฟนเก่าคนโปรด", b: "เลิกกันไปนานแต่ยังวนเวียนในสตอรี่ รสชาติหวานปนขมเหมือนความทรงจำ ด้วย Dark Chocolate Liqueur ผสม Cognac บาดคอเล็กๆ ให้รู้ว่าคิดถึงทีไรก็ยังเจ็บจี๊ดที่ใจ" },
+            { t: "คอกเทล เหม่ยตูอู้ว้าว", b: "ตัวจริงไม่ตรงปกไม่เป็นไร ขอรูปในไอจีปังไว้ก่อน แก้วนี้ต้องสีสวยฟรุ้งฟริ้งด้วย Cotton Candy ก้อนโต ละลายลงใน Rose Vodka หวานเจี๊ยบจนตาหยี ถ่ายรูปลงสตอรี่แล้วดูแพง" },
+            { t: "คอกเทล คนเศร้าขอเมาหน่อย", b: "ชีวิตมันเศร้าจังวะ ต้องกระดก Black Vodka ผสม Blackberry บดละเอียด ให้สีม่วงคล้ำเหมือนรอยช้ำข้างใน ดื่มแล้วดูลึกลับน่าน่าเป็นห่วง" },
+            { t: "คอกเทล ฟรีแลนซ์", b: "งานเร่ง เงินช้า ลูกค้าแก้บรีฟ แก้วนี้ต้องอัดฉีดวิตามินซีด้วย น้ำส้มคั้นสด ผสม Tequila ช็อตหนักๆ กระตุ้นเลือดลมให้สูบฉีด พร้อมปั่นงานโต้รุ่งยันเช้าโดยไม่น็อค" },
+            { t: "คอกเทล ตัวแม่แคร์บ้าง", b: "สวย เชิด ไม่สนโลก ใครจะดราม่าพี่ขอจิบสวยๆ รสชาติหรูเริ่ดด้วย Kir Royale แชมเปญผสมเหล้าแบล็คเคอร์แรนท์ สีแดงก่ำดั่งเลือดนก จิบเบาๆ แล้วมองบนใส่พวกขี้อิจฉา" },
+            { t: "คอกเทล เดอะแบกหัวร้อน", b: "แบกทีมจนหลังหักแต่เพื่อนแจกยับ ต้องดับหัวร้อนด้วย Blue Kamikaze เย็นเจี๊ยบปั่นละเอียด สีฟ้าสดใสเหมือนหลอดมานาในเกม กระดกทีเดียวให้สดชื่นหายบ้า แล้วพร้อมเปิดไมค์ด่าต่อ" },
+            { t: "คอกเทล เด็กฝึกใสใส", b: "โลกสวย เพิ่งจบใหม่ ไฟแรงเวอร์ ตายังไม่คล้ำ รสชาติสดใสซาบซ่าด้วย Mojito Virgin ดื่มง่าย คล่องคอ เหมือนชีวิตการทำงานที่คิดไปเอง จะโรยด้วยกลีบกุหลาบ" },
+            { t: "คอกเทล วันละกั๊ก", b: "คุยทุกวัน บอกฝันดีทุกคืน แต่เป็นได้แค่พี่น้อง รสชาติจึงต้องกั๊กๆ ครึ่งๆ กลางๆ แบบ Midori Sour เปรี้ยวอมหวาน สีเขียวนีออนสะดุดตา แต่หาความชัดเจนไม่ได้ว่าตกลงจะเมาหรือจะหวานกันแน่" },
+            { t: "คอกเทล เมาหนีหนี้", b: "ชื่อฟังดูเหมือนแก๊งทวงหนี้จากจีน เพราะไม่มีตังทำไรไม่ได้ เมาแม่มเลยละกัน B-52 จุดไฟลุกท่วมแก้ว ร้อนแรงแผดเผา กระดกเข้าปากรวดเดียวให้รู้ว่ากูเมาอย่ามาทวง" }
         ];
 
         function showPreview(event) {
@@ -237,6 +221,26 @@
             }
         }
 
+        // ฟังก์ชันสำหรับตัดคำขึ้นบรรทัดใหม่ (Word Wrap)
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            let words = text.split(' ');
+            let line = '';
+
+            for(let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = ctx.measureText(testLine);
+                let testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
         function generateCocktailCard() {
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
@@ -249,17 +253,16 @@
             }
 
             // สุ่มคอกเทล
-            const randomCocktail = cocktails[Math.floor(Math.random() * cocktails.length)];
+            const result = cocktailData[Math.floor(Math.random() * cocktailData.length)];
 
             const cardImg = new Image();
             cardImg.src = 'card.jpg'; 
             
             cardImg.onload = function() {
-                // ตั้งขนาด Canvas ตามรูปการ์ด
                 canvas.width = cardImg.width;
                 canvas.height = cardImg.height;
-
-                // วาดพื้นหลัง
+                
+                // 1. วาด Background
                 ctx.drawImage(cardImg, 0, 0);
 
                 const reader = new FileReader();
@@ -268,69 +271,78 @@
                     userImg.src = event.target.result;
                     
                     userImg.onload = function() {
-                        // --- คำนวณตำแหน่งใหม่ตามโจทย์ ---
+                        // --- CONFIGURATION ZONE (ปรับแต่งตำแหน่งตรงนี้) ---
                         
-                        // 1. หาจุดกึ่งกลางภาพ
-                        const centerX = canvas.width / 2;
-                        const centerY = canvas.height / 2;
+                        // คำนวณ Shift (เทียบกับขนาดรูปจริง)
+                        const w = canvas.width;
+                        const h = canvas.height;
 
-                        // 2. คำนวณ Offset (เลื่อนขวา 10% ของความกว้าง, เลื่อนขึ้น 25% ของความสูง)
-                        const offsetX = canvas.width * 0.10;
-                        const offsetY = canvas.height * 0.25;
+                        // รูป: ลดขนาด 30% (เหลือ 70%), ขยับขวา 10%, ขยับขึ้น 15%
+                        // สมมติฐานเดิมรูปขนาด 300px ที่กลางจอ (X=center, Y=200)
+                        // ต้องปรับค่า Base ตรงนี้ให้ตรงกับหน้างานจริง แล้ว Code จะคำนวณ Shift ให้
+                        
+                        let baseSize = 300; // ขนาดตั้งต้นเดิม
+                        let baseX = (w - baseSize) / 2; // กึ่งกลางเดิม
+                        let baseY = 200; // ความสูงเดิม
 
-                        // 3. จุดยึดใหม่ (Anchor Point)
-                        const targetX = centerX + offsetX;
-                        const targetY = centerY - offsetY; // ลบคือเลื่อนขึ้น
+                        // Apply Logic:
+                        let newSize = baseSize * 0.7; // ลดขนาดลง 30%
+                        let shiftX = w * 0.10; // เยื้องขวา 10% ของความกว้างรูป
+                        let shiftY = h * 0.15; // สูงขึ้น 15% ของความสูงรูป
 
-                        // 4. ขนาดรูป User (ลดลง 30% จากเดิม)
-                        // สมมติขนาดเดิมคือ 30% ของความกว้างรูป Card -> ลดเหลือ 70% ของค่านั้น
-                        const originalSize = canvas.width * 0.35; // ประมาณเอาจากไซส์มาตรฐาน
-                        const photoSize = originalSize * 0.70; // ลดลง 30%
+                        let finalPhotoX = baseX + shiftX; 
+                        let finalPhotoY = baseY - shiftY;
 
-                        // วาดรูป User (Crop เป็นสี่เหลี่ยมจัตุรัส)
+                        // วาดรูป User (Crop เป็นสี่เหลี่ยม)
                         const size = Math.min(userImg.width, userImg.height);
                         const sx = (userImg.width - size) / 2;
                         const sy = (userImg.height - size) / 2;
-                        
-                        // วาดที่ตำแหน่ง Target (ลบครึ่งหนึ่งของขนาดเพื่อให้จุด Center ตรงกับ targetX,Y)
-                        ctx.drawImage(userImg, sx, sy, size, size, targetX - (photoSize/2), targetY - (photoSize/2), photoSize, photoSize);
 
-                        // --- ตั้งค่า Font Scaling (เพื่อให้สัดส่วนเท่าเดิมไม่ว่ารูป bg จะใหญ่แค่ไหน) ---
-                        // ใช้ Scale factor โดยอิงจากความกว้างรูป 1000px เป็นฐาน
-                        // 16pt (approx 21px) -> scale = 0.021
-                        // 12pt (approx 16px) -> scale = 0.016
-                        // 8pt (approx 11px) -> scale = 0.011
-                        
-                        const fontSizeName = canvas.width * 0.045; // ประมาณ 16pt++ (ปรับให้ใหญ่นิดนึงให้อ่านง่าย)
-                        const fontSizeHead = canvas.width * 0.035; // ประมาณ 12pt++
-                        const fontSizeBody = canvas.width * 0.025; // ประมาณ 8pt++
+                        ctx.save(); // บันทึกสถานะก่อนวาด
+                        // ใส่ Shadow ให้รูปนิดหน่อยเพื่อให้ดูไม่ลอย
+                        ctx.shadowColor = "rgba(0,0,0,0.5)";
+                        ctx.shadowBlur = 10;
+                        ctx.drawImage(userImg, sx, sy, size, size, finalPhotoX, finalPhotoY, newSize, newSize);
+                        ctx.restore(); // คืนค่า
 
+                        // --- Text Configuration ---
+                        // จุดกึ่งกลางใหม่สำหรับการจัดข้อความ (อิงจากรูปที่ขยับแล้ว)
+                        let textCenterX = finalPhotoX + (newSize / 2);
+                        
+                        // 2. ชื่อ User (Name)
+                        // สี #d1a673, ขนาด 16pt (approx 21px)
+                        ctx.font = "bold 22px 'Sarabun', sans-serif"; 
+                        ctx.fillStyle = "#d1a673";
                         ctx.textAlign = "center";
-                        ctx.fillStyle = "#FFFFFF"; // สีขาวตามสั่ง
+                        // วางชื่อใต้รูปนิดหน่อย
+                        let nameY = finalPhotoY + newSize + 40; 
+                        ctx.fillText("คุณ " + nameInput, textCenterX, nameY);
 
-                        // --- 5. วาดชื่อ User ---
-                        // อยู่ใต้รูปภาพเล็กน้อย
-                        ctx.font = `bold ${fontSizeName}px 'Sarabun'`;
-                        const nameY = targetY + (photoSize/2) + (fontSizeName * 1.5);
-                        ctx.fillText("คุณ " + nameInput, targetX, nameY);
-
-                        // --- 6. วาดคำทำนาย (Headline) ---
-                        const textStartY = nameY + (fontSizeHead * 2);
-                        ctx.font = `bold ${fontSizeHead}px 'Sarabun'`;
-                        ctx.fillText(randomCocktail.title, targetX, textStartY);
-
-                        // --- 7. วาดคำทำนาย (Body) ---
-                        // ต้องใช้ฟังก์ชันตัดคำ (Word Wrap)
-                        ctx.font = `normal ${fontSizeBody}px 'Sarabun'`;
-                        const bodyY = textStartY + (fontSizeHead * 1.5);
+                        // 3. คำทำนาย (Cocktail Text)
+                        // เยื้องไปขวา (inline) แต่ขอบซ้ายไม่ทับรูป
+                        // Logic: ใช้ Center X เดียวกับรูปที่ขยับไปแล้ว เพื่อความสมดุล
                         
-                        // กำหนดความกว้างกล่องข้อความ (ไม่ให้กว้างเกินไปจนทับซ้าย)
-                        // ให้กว้างประมาณ photoSize * 1.5
-                        const maxTextWidth = photoSize * 1.8; 
-                        
-                        wrapText(ctx, randomCocktail.desc, targetX, bodyY, maxTextWidth, fontSizeBody * 1.4);
+                        let textStartY = nameY + 50; // เริ่มต้นใต้ชื่อลงมาอีก
+                        let maxTextWidth = w * 0.5; // ความกว้างข้อความ (ประมาณครึ่งจอ)
+                        // เช็คขอบ: ถ้า CenterX ลบครึ่งนึงของ TextWidth แล้วไปทับซ้าย ให้ขยับ
+                        // แต่ในที่นี้เราจัด Center Align ตามรูปที่ขยับขวาไปแล้ว น่าจะปลอดภัย
 
-                        // แสดงผล
+                        // 3.1 Headline: หนา ขาว 12pt (~16px)
+                        ctx.font = "bold 16px 'Sarabun', sans-serif";
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.textAlign = "center"; // จัดกึ่งกลาง (เทียบกับแกนรูป)
+                        ctx.fillText(result.t, textCenterX, textStartY);
+
+                        // 3.2 Body Copy: ธรรมดา ขาว 8pt (~11px)
+                        ctx.font = "11px 'Sarabun', sans-serif";
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.textAlign = "center"; // จัดกึ่งกลาง
+                        
+                        // เรียกฟังก์ชันตัดคำ (Wrap text)
+                        // เริ่มวาดใต้ Headline 20px
+                        wrapText(ctx, result.b, textCenterX, textStartY + 25, maxTextWidth, 18);
+
+                        // --- Render ---
                         const resultImage = document.getElementById('final-image');
                         resultImage.src = canvas.toDataURL('image/jpeg');
                         
@@ -340,30 +352,6 @@
                 }
                 reader.readAsDataURL(fileInput);
             }
-        }
-
-        // ฟังก์ชันสำหรับตัดคำขึ้นบรรทัดใหม่
-        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-            const words = text.split(' '); // ตัดคำด้วยช่องว่าง (ภาษาไทยอาจต้องใช้ lib ช่วย แต่ถ้ายาวๆ browser ตัดไม่ค่อยแม่น ใช้วิธีวนลูปตัวอักษร)
-            
-            // สำหรับภาษาไทยที่ไม่มี space ใช้การวนลูปทีละตัวอักษรจะชัวร์กว่า
-            let line = '';
-            let currentY = y;
-
-            for(let n = 0; n < text.length; n++) {
-                const testLine = line + text[n];
-                const metrics = ctx.measureText(testLine);
-                const testWidth = metrics.width;
-                
-                if (testWidth > maxWidth && n > 0) {
-                    ctx.fillText(line, x, currentY);
-                    line = text[n];
-                    currentY += lineHeight;
-                } else {
-                    line = testLine;
-                }
-            }
-            ctx.fillText(line, x, currentY);
         }
     </script>
 </body>
