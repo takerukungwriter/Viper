@@ -28,7 +28,6 @@
             min-height: 100vh;
         }
 
-        /* รูปภาพ Header ทั่วไป */
         .header-img {
             display: block;
             width: 100%;
@@ -37,12 +36,10 @@
             margin: 0 auto 10px;
         }
 
-        /* Pic02 ใหญ่พิเศษ */
         #pic02-large {
             max-width: 780px; 
         }
 
-        /* CSS วิดีโอ Shorts */
         .short-video-container {
             width: 100%;
             max-width: 350px;
@@ -117,6 +114,7 @@
             object-fit: cover;
         }
 
+        /* สไตล์ปุ่มกดทั่วไป */
         button {
             background-color: #FFD700;
             color: #000;
@@ -134,6 +132,39 @@
         button:hover {
             background-color: #ffaa00;
             transform: scale(1.05);
+        }
+
+        /* --- ปุ่มสำหรับลิงก์ไปหน้ากิจกรรม --- */
+        .btn-link {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #e3526e; /* สีธีม readawrite (ชมพูแดง) หรือใช้สีทองก็ได้ */
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(227, 82, 110, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn-link:hover {
+            background-color: #c93b55;
+            transform: scale(1.05);
+        }
+
+        /* ปุ่มเล่นใหม่ (ให้ดูรองลงมา) */
+        .btn-secondary {
+            background-color: #444; 
+            color: white; 
+            box-shadow: none;
+            padding: 10px 30px;
+            font-size: 1rem;
+        }
+        .btn-secondary:hover {
+            background-color: #666;
         }
 
         #result-container {
@@ -162,9 +193,10 @@
             .container {
                 padding: 10px;
             }
-            button {
+            button, .btn-link {
                 width: 100%;
                 font-size: 1.1rem;
+                box-sizing: border-box; /* ให้ padding ไม่ดันความกว้างเกิน */
             }
         }
     </style>
@@ -210,17 +242,24 @@
         <div id="result-container">
             <h2 style="color:#FFD700;">เรียบร้อย! คอกเทลของคุณคือ...</h2>
             <img id="final-image" src="" alt="Result Card">
-            <p style="color: #ccc; margin-top: 10px;">กดค้างที่รูปเพื่อบันทึก หรือ คลิกขวา Save Image <br> แล้วนำไปแชร์ที่หน้ากิจกรรมในนิยายเพื่อลุ้นของรางวัล</p>
-            <button onclick="location.reload()" style="background-color: #444; color: white; margin-top: 20px;">เล่นใหม่อีกครั้ง</button>
+            <p style="color: #ccc; margin-top: 15px; margin-bottom: 5px;">
+                กดค้างที่รูปเพื่อบันทึก หรือ คลิกขวา Save Image <br> 
+                แล้วนำไปแชร์ที่หน้ากิจกรรมเพื่อลุ้นของรางวัล
+            </p>
+
+            <a href="https://www.readawrite.com/a/463617f00fa529e3354d0c4abbcf3eaa" target="_blank" class="btn-link">
+                ไปโพสต์รูปที่หน้ากิจกรรม ReadAWrite
+            </a>
+            
+            <br> <button onclick="location.reload()" class="btn-secondary">เล่นใหม่อีกครั้ง</button>
         </div>
     </div>
 
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        // *** ข้อมูลคอกเทล รวมทั้งหมด 30 แบบ ***
+        // *** ข้อมูลคอกเทล 30 แบบ ***
         const cocktails = [
-            // ชุดเดิม 20 แบบ
             { title: "คอกเทลเฟรนด์โซนคนดี", desc: "ทำดีแทบตายสุดท้ายเป็นได้แค่พี่น้อง รสชาติจึงต้องหวานนำตอนต้นแล้วขมคอตอนปลาย ด้วย Gin ผสม Tonic ใส่ Bitters ให้พอช้ำใจ แล้วแปะเปลือกส้มโง่ๆ ไว้หลอกตัวเองว่าเขามีใจ" },
             { title: "คอกเทลมงคลแปดทิศ", desc: "ชีวิตขับเคลื่อนด้วยดวงและสีมงคล แก้วนี้ต้องมาในธีมเขียวเหนี่ยวทรัพย์ ผสม น้ำสมุนไพรไทย กับ Vodka โรย แผ่นทองคำเปลว ปลุกเสกก่อนดื่มเพื่อความปังปุริเย่" },
             { title: "คอกเทลเผือกสไปซี่", desc: "รู้ลึกรู้จริงเรื่องชาวบ้านยิ่งกว่าเรื่องตัวเอง รสชาติจึงต้องเปรี้ยวจี๊ดเข็ดฟันด้วย มะนาวคั้นสด ตัดกับ เกลือ ที่ขอบแก้ว และเหยาะ Tabasco ให้เผ็ดร้อนเหมือนฝีปากเวลาเม้าท์มอย" },
@@ -241,8 +280,6 @@
             { title: "คอกเทลน้องไม่ต้องกราบใคร", desc: "โลกสวย เพิ่งจบใหม่ ไฟแรงเวอร์ ตายังไม่คล้ำ รสชาติสดใสซาบซ่าด้วย Mojito Virgin ดื่มง่าย คล่องคอ เหมือนชีวิตการทำงานที่คิดไปเอง จะโรยด้วยกลีบกุหลาบ" },
             { title: "คอกเทลวันละกั๊ก", desc: "คุยทุกวัน บอกฝันดีทุกคืน แต่เป็นได้แค่พี่น้อง รสชาติจึงต้องกั๊กๆ ครึ่งๆ กลางๆ แบบ Midori Sour เปรี้ยวอมหวาน สีเขียวนีออนสะดุดตา แต่หาความชัดเจนไม่ได้ว่าตกลงจะเมาหรือจะหวานกันแน่" },
             { title: "คอกเทลเมาหนีหนี้", desc: "ชื่อฟังดูเหมือนแก๊งทวงหนี้จากจีน เพราะไม่มีตังทำไรไม่ได้ เมาแม่มเลยละกัน B-52 จุดไฟลุกท่วมแก้ว ร้อนแรงแผดเผา กระดกเข้าปากรวดเดียวให้รู้ว่ากูเมาอย่ามาทวง" },
-            
-            // เพิ่มใหม่ 10 แบบ
             { title: "คอกเทลน้ำตามาม่า", desc: "วันที่ 1 และ 16 พอหวยออกปุ๊บกลายเป็นผู้ประสบภัยทางการเงินปั๊บ ต้องเจอเหล้าขาวหมักสมุนไพรบ้านๆ ผสมน้ำตาร่วง โรยหน้าด้วยต้นหอมซอยเพื่อสารอาหาร ยกซดแล้วเดินไปต้มน้ำร้อนรอเส้นอืดได้เลย" },
             { title: "คอกเทลแก้วนี้หนักขวา", desc: "สำหรับคนทักไปเป็นร้อยประโยค แต่เขาตอบกลับมาแค่สติกเกอร์นิ้วโป้งอันเดียว ต้องเจอความขมปี๋ของมะระขี้นกปั่นคั้นสด ผสม Tonic จืดจางเหมือนบทสนทนาของเรา อะเฮื้อออ..." },
             { title: "คอกเทลโลว์แคล", desc: "สำหรับนักสู้ที่พ่ายแพ้ต่อกลิ่นหมูกระทะและชาบูทุกเย็น ต้องเจอนมข้นหวานราดวิปครีมจุกๆ ผสมเหล้าหวาน Baileys กระดกแก้วนี้แล้วตะโกนบอกพนักงานว่า น้องคะ! หวานร้อย!" },
@@ -300,7 +337,6 @@
                 return;
             }
 
-            // สุ่มเลือกจาก 30 รายการ
             const result = cocktails[Math.floor(Math.random() * cocktails.length)];
 
             const cardImg = new Image();
