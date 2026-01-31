@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jay Bartender Game</title>
+    <style>
+        /* CSS ตกแต่งหน้าเว็บ */
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Sarabun', sans-serif;
+            text-align: center;
+            color: white;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7); /* เพิ่มความเข้มพื้นหลังอีกนิด */
+            min-height: 100vh;
+        }
+
+        .header-img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto 10px;
+        }
+
+        .gold-headline {
+            color: #FFD700;
+            font-size: 1.5rem;
+            margin: 30px 0;
+            text-shadow: 2px 2px 4px #000000;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        input[type="text"] {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* ปรับแต่งปุ่มเลือกไฟล์ */
+        input[type="file"] {
+            display: block;
+            width: 90%;
+            margin: 10px auto;
+            padding: 10px;
+            color: #fff;
+        }
+
+        /* ส่วนแสดงตัวอย่างรูป (Preview) */
+        #preview-container {
+            margin: 15px auto;
+            width: 150px;
+            height: 150px;
+            border: 2px dashed #FFD700;
+            border-radius: 10px;
+            display: none; /* ซ่อนไว้ก่อน */
+            overflow: hidden;
+            background-color: #333;
+        }
+        
+        #preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        button {
+            background-color: #FFD700;
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50px;
+            margin-top: 20px;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        button:hover {
+            background-color: #ffaa00;
+            transform: scale(1.05);
+        }
+
+        #result-container {
+            display: none;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s;
+        }
+
+        #final-image {
+            max-width: 100%;
+            border: 5px solid #FFD700;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="logo.png" class="header-img" alt="Logo">
+        <img src="pic01.png" class="header-img" alt="Pic 01">
+        <img src="text01.png" class="header-img" alt="Text 01">
+        <img src="pic02.png" class="header-img" alt="Pic 02">
+
+        <div class="gold-headline">
+            "คอกเทลที่เหมาะกับคุณน่ะเหรอ... <br>
+            ได้สิ ผมเจย์บาร์เทนเดอร์เลยนะ <br>
+            จะชงที่เหมาะๆ ให้เลย"
+        </div>
+
+        <div class="input-group">
+            <label style="font-size: 1.1rem; font-weight: bold;">1. เลือกรูปใบหน้าของคุณ</label>
+            <input type="file" id="uploadImage" accept="image/*" onchange="showPreview(event)">
+            
+            <div id="preview-container">
+                <img id="preview-img" src="">
+            </div>
+            
+            <label style="font-size: 1.1rem; font-weight: bold; margin-top: 20px; display:block;">2. กรอกชื่อของคุณ</label>
+            <input type="text" id="userName" placeholder="พิมพ์ชื่อเล่น...">
+
+            <button onclick="generateCocktailCard()">ชงคอกเทลเลย</button>
+        </div>
+
+        <div id="result-container">
+            <h2 style="color:#FFD700;">เรียบร้อย! คอกเทลของคุณคือ...</h2>
+            <img id="final-image" src="" alt="Result Card">
+            <p style="color: #ccc; margin-top: 10px;">กดค้างที่รูปเพื่อบันทึก หรือ คลิกขวา Save Image</p>
+            
+            <button onclick="location.reload()" style="background-color: #444; color: white; padding: 10px 20px; font-size: 1rem; margin-top: 20px;">เล่นใหม่อีกครั้ง</button>
+        </div>
+    </div>
+
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <script>
+        const randomWords = [
+            "รักที่ขมปร่า (Dark Rum)",
+            "ความหวังสีคราม (Blue Hawaii)",
+            "ซัมเมอร์ที่คิดถึง (Mojito)",
+            "น้ำตาแห่งดาวเสาร์ (Gin Tonic)",
+            "ความลับของเจย์ (Special Mix)",
+            "ยิ้มหวานทานง่าย (Pink Lady)"
+        ];
+
+        // ฟังก์ชันแสดงตัวอย่างรูปทันทีที่เลือกไฟล์
+        function showPreview(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImg = document.getElementById('preview-img');
+                    previewImg.src = e.target.result;
+                    document.getElementById('preview-container').style.display = 'block'; // โชว์กรอบรูป
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function generateCocktailCard() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const nameInput = document.getElementById('userName').value;
+            const fileInput = document.getElementById('uploadImage').files[0];
+
+            if (!nameInput || !fileInput) {
+                alert("กรุณาใส่ชื่อและอัพโหลดรูปภาพก่อนนะครับ");
+                return;
+            }
+
+            const randomWord = randomWords[Math.floor(Math.random() * randomWords.length)];
+
+            const cardImg = new Image();
+            cardImg.src = 'card.jpg'; 
+            
+            cardImg.onload = function() {
+                canvas.width = cardImg.width;
+                canvas.height = cardImg.height;
+                ctx.drawImage(cardImg, 0, 0);
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const userImg = new Image();
+                    userImg.src = event.target.result;
+                    
+                    userImg.onload = function() {
+                        // *** ตั้งค่าตำแหน่งรูป (แก้ไขตัวเลขตรงนี้ถ้าต้องการขยับ) ***
+                        const photoX = 100;      
+                        const photoY = 200;      
+                        const photoW = 300;      
+                        const photoH = 300;      
+
+                        const size = Math.min(userImg.width, userImg.height);
+                        const sx = (userImg.width - size) / 2;
+                        const sy = (userImg.height - size) / 2;
+
+                        ctx.drawImage(userImg, sx, sy, size, size, photoX, photoY, photoW, photoH);
+
+                        // เขียนชื่อ
+                        ctx.font = "bold 40px 'Sarabun', sans-serif";
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.textAlign = "center";
+                        ctx.fillText("คุณ " + nameInput, canvas.width / 2, 600); 
+
+                        // เขียนคำสุ่ม
+                        ctx.fillStyle = "#FFD700";
+                        ctx.font = "bold 50px 'Sarabun', sans-serif";
+                        ctx.fillText(randomWord, canvas.width / 2, 680);
+
+                        const resultImage = document.getElementById('final-image');
+                        resultImage.src = canvas.toDataURL('image/jpeg');
+                        
+                        document.getElementById('result-container').style.display = 'block';
+                        document.getElementById('result-container').scrollIntoView({behavior: "smooth"});
+                    }
+                }
+                reader.readAsDataURL(fileInput);
+            }
+        }
+    </script>
+</body>
+</html>
