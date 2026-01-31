@@ -28,23 +28,29 @@
             min-height: 100vh;
         }
 
-        /* รูปภาพ Header ให้ยืดหดตามจอ */
+        /* รูปภาพ Header ทั่วไป */
         .header-img {
             display: block;
             width: 100%;
-            max-width: 600px;
+            max-width: 600px; /* ขนาดปกติของรูปอื่นๆ */
             height: auto;
             margin: 0 auto 10px;
         }
 
-        /* --- เพิ่ม CSS สำหรับวิดีโอ YouTube Shorts --- */
+        /* --- เพิ่ม CSS เฉพาะสำหรับ pic02.png --- */
+        #pic02-large {
+            /* เพิ่มขนาด max-width ขึ้น 30% (จาก 600px เป็น 780px) */
+            max-width: 780px; 
+        }
+
+        /* --- CSS สำหรับวิดีโอ YouTube Shorts --- */
         .short-video-container {
             width: 100%;
-            max-width: 350px; /* จำกัดความกว้างให้พอดีกับสัดส่วนมือถือ */
-            aspect-ratio: 9 / 16; /* บังคับสัดส่วนเป็นแนวตั้ง */
-            margin: 20px auto; /* จัดกึ่งกลาง */
-            border: 3px solid #FFD700; /* กรอบสีทอง */
-            border-radius: 15px; /* มุมโค้ง */
+            max-width: 350px;
+            aspect-ratio: 9 / 16;
+            margin: 20px auto;
+            border: 3px solid #FFD700;
+            border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
@@ -179,7 +185,8 @@
                 allowfullscreen>
             </iframe>
         </div>
-        <img src="pic02.png" class="header-img" alt="Pic 02">
+
+        <img src="pic02.png" class="header-img" id="pic02-large" alt="Pic 02">
 
         <div class="gold-headline">
             "ผมเจย์บาร์เทนเดอร์พร้อมดูแลคุณแล้ว... <br>
